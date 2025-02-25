@@ -68,31 +68,88 @@ class GamPole {
 
     checkWinner() {
         for (let i = 0; i < this.pole.length; i++) {
-            if (this.pole[i][0] === this.pole[i][1] && this.pole[i][0] === this.pole[i][2] && this.pole[i][2] !== EMPTY) {
-                this.render_color([[i, 0], [i, 1], [i, 2]])
+            if (this.checkRow(i)) {
+                const list_to_coloring = [];
+                for (let j = 0; j < this.pole.length; j++) {
+                    list_to_coloring.push([i, j])
+                }
+                this.render_color(list_to_coloring)
                 this.game_end = true;
                 return this.current_player
             }
-            if (this.pole[0][i] === this.pole[1][i] && this.pole[0][i] === this.pole[2][i] && this.pole[2][i] !== EMPTY) {
-                this.render_color([[0, i], [1, i], [2, i]])
+            if (this.checkColumn(i)) {
+                const list_to_coloring = [];
+                for (let j = 0; j < this.pole.length; j++) {
+                    list_to_coloring.push([j, i])
+                }
+                this.render_color(list_to_coloring)
                 this.game_end = true;
                 return this.current_player
             }
         }
 
-        if (this.pole[0][0] === this.pole[1][1] && this.pole[0][0] === this.pole[2][2] && this.pole[2][2] !== EMPTY) {
-            this.render_color([0, 0], [1, 1], [2, 2])
+        if (this.checkDiagonalFirst()) {
+            const list_to_coloring = [];
+            for (let j = 0; j < this.pole.length; j++) {
+                list_to_coloring.push([j, j])
+            }
+            this.render_color(list_to_coloring)
             this.game_end = true;
             return this.current_player
         }
 
-        if (this.pole[2][0] === this.pole[1][1] && this.pole[2][0] === this.pole[0][2] && this.pole[0][2] !== EMPTY) {
-            this.render_color([[0, 2], [1, 1], [2, 0]])
+        if (this.checkDiagonalSecond()) {
+            const list_to_coloring = [];
+            for (let j = 0; j < this.pole.length; j++) {
+                list_to_coloring.push([j, this.pole.length - j - 1])
+            }
+            this.render_color(list_to_coloring)
             this.game_end = true;
             return this.current_player;
         }
 
         return EMPTY;
+    }
+
+    checkRow(row) {
+        for (let i = 1; i < this.pole.length; i++) {
+            if (this.pole[row][0] !== this.pole[row][i]) {
+                return false;
+            }
+        }
+
+        return this.pole[row][0] !== EMPTY;
+    }
+
+    checkColumn(column) {
+        for (let i = 1; i < this.pole.length; i++) {
+            if (this.pole[0][column] !== this.pole[i][column]) {
+                return false;
+            }
+        }
+
+        return this.pole[0][column] !== EMPTY;
+    }
+
+    checkDiagonalFirst() {
+        for (let i = 1; i < this.pole.length; i++) {
+            if (this.pole[0][0] !== this.pole[i][i])
+                return false;
+        }
+
+        return this.pole[0][0] !== EMPTY;
+
+    }
+
+    checkDiagonalSecond() {
+        const poleLength = this.pole.length;
+        for (let i = 1; i < poleLength; i++) {
+            if (this.pole[0][poleLength - 1] !== this.pole[i][poleLength - 1 - i])
+                return false;
+        }
+
+        return this.pole[0][poleLength - 1] !== EMPTY;
+
     }
 }
 
@@ -174,7 +231,7 @@ function addBotListener() {
 }
 
 function resetClickHandler() {
-    pole = new GamPole();
+    pole = new GamPole(size);
     startGame();
     console.log('reset!');
 }
