@@ -5,6 +5,9 @@ const EMPTY = ' ';
 const container = document.getElementById('fieldWrapper');
 
 class GamPole {
+
+    current_player = CROSS;
+
     pole = [
         [EMPTY, EMPTY, EMPTY],
         [EMPTY, EMPTY, EMPTY],
@@ -14,7 +17,14 @@ class GamPole {
     constructor() {
     }
 
+    move(row, col) {
+        this.pole[row][col] = this.current_player;
+        renderSymbolInCell(this.current_player, row, col);
+        this.current_player = this.current_player === CROSS ? ZERO : CROSS;
+    }
 }
+
+const pole = new GamPole();
 
 startGame();
 addResetListener();
@@ -42,6 +52,7 @@ function cellClickHandler(row, col) {
     // Пиши код тут
     console.log(`Clicked on cell: ${row}, ${col}`);
 
+    pole.move(row, col);
 
     /* Пользоваться методом для размещения символа в клетке так:
         renderSymbolInCell(ZERO, row, col);
