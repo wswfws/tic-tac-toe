@@ -11,6 +11,7 @@ class GamPole {
         [EMPTY, EMPTY, EMPTY]
     ]
     current_player = ZERO;
+    game_end = false;
 
     constructor() {
     }
@@ -19,16 +20,20 @@ class GamPole {
     _num_empty_cell = 9;
 
     move(row, col) {
-        if (this.pole[row][col] !== EMPTY) {
-            return
+        if (!this.game_end) {
+            if (this.pole[row][col] !== EMPTY) {
+                return
+            }
+            this.pole[row][col] = this.current_player;
+            this.current_player = this.current_player === CROSS ? ZERO : CROSS;
+            renderSymbolInCell(this.current_player, row, col);
+            this._num_empty_cell--;
+            if (this._num_empty_cell === 0) {
+                this.has_empty_cell = false;
+                this.game_end = true;
+            }
         }
-        this.pole[row][col] = this.current_player;
-        this.current_player = this.current_player === CROSS ? ZERO : CROSS;
-        renderSymbolInCell(this.current_player, row, col);
-        this._num_empty_cell--;
-        if (this._num_empty_cell === 0) {
-            this.has_empty_cell = false;
-        }
+
     }
 
     render_color(arr_to_color) {
@@ -43,21 +48,25 @@ class GamPole {
         for (let i = 0; i < this.pole.length; i++) {
             if (this.pole[i][0] === this.pole[i][1] && this.pole[i][0] === this.pole[i][2] && this.pole[i][2] !== EMPTY) {
                 this.render_color([[i, 0], [i, 1], [i, 2]])
+                this.game_end = true;
                 return this.current_player
             }
             if (this.pole[0][i] === this.pole[1][i] && this.pole[0][i] === this.pole[2][i] && this.pole[2][i] !== EMPTY) {
                 this.render_color([[0, i], [1, i], [2, i]])
+                this.game_end = true;
                 return this.current_player
             }
         }
 
         if (this.pole[0][0] === this.pole[1][1] && this.pole[0][0] === this.pole[2][2] && this.pole[2][2] !== EMPTY) {
             this.render_color([0, 0], [1, 1], [2, 2])
+            this.game_end = true;
             return this.current_player
         }
 
         if (this.pole[2][0] === this.pole[1][1] && this.pole[2][0] === this.pole[0][2] && this.pole[0][2] !== EMPTY) {
             this.render_color([[0, 2], [1, 1], [2, 0]])
+            this.game_end = true;
             return this.current_player;
         }
 
