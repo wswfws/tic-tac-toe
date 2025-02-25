@@ -5,19 +5,23 @@ const EMPTY = ' ';
 const container = document.getElementById('fieldWrapper');
 
 class GamPole {
-    pole = [
-        [EMPTY, EMPTY, EMPTY],
-        [EMPTY, EMPTY, EMPTY],
-        [EMPTY, EMPTY, EMPTY]
-    ]
+    pole = [];
     current_player = ZERO;
     game_end = false;
+    has_empty_cell = true;
+    _num_empty_cell = 1;
 
-    constructor() {
+    constructor(size) {
+        this.pole = []
+        for (let i = 0; i < size; i++) {
+            this.pole.push([]);
+            for (let j = 0; j < size; j++) {
+                this.pole[i].push(EMPTY);
+            }
+        }
+        this._num_empty_cell = size * size;
     }
 
-    has_empty_cell = true;
-    _num_empty_cell = 9;
 
     move(row, col) {
         if (!this.game_end) {
@@ -33,7 +37,6 @@ class GamPole {
                 this.game_end = true;
             }
         }
-
     }
 
     render_color(arr_to_color) {
@@ -74,13 +77,15 @@ class GamPole {
     }
 }
 
-let pole = new GamPole();
+let size = Number(prompt("введи размер поля, по умолчанию - 3"));
+
+let pole = new GamPole(size);
 
 startGame();
 addResetListener();
 
 function startGame() {
-    renderGrid(3);
+    renderGrid(size);
 }
 
 function renderGrid(dimension) {
