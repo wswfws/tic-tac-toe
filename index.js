@@ -77,7 +77,11 @@ class GamPole {
     }
 }
 
-let size = Number(prompt("введи размер поля, по умолчанию - 3"));
+let size = 0
+while (size < 3) {
+    size = Number(prompt("введи размер поля >= 3, по умолчанию - 3"));
+}
+
 
 let pole = new GamPole(size);
 
