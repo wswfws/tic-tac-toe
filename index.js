@@ -10,7 +10,7 @@ class GamPole {
         [EMPTY, EMPTY, EMPTY],
         [EMPTY, EMPTY, EMPTY]
     ]
-    current_player = CROSS
+    current_player = ZERO
 
     constructor() {
     }
@@ -22,9 +22,9 @@ class GamPole {
         if (this.pole[row][col] !== EMPTY) {
             return
         }
+        this.current_player = this.current_player === CROSS ? ZERO : CROSS;
         this.pole[row][col] = this.current_player;
         renderSymbolInCell(this.current_player, row, col);
-        this.current_player = this.current_player === CROSS ? ZERO : CROSS;
         this._num_empty_cell--;
         if (this._num_empty_cell === 0) {
             this.has_empty_cell = false;
@@ -34,19 +34,19 @@ class GamPole {
 
     checkWinner() {
         for (let i = 0; i < this.pole.length; i++) {
-            if (this.pole[i][0] === this.pole[i][1] && this.pole[i][0] === this.pole[i][2]) {
+            if (this.pole[i][0] === this.pole[i][1] && this.pole[i][0] === this.pole[i][2] && this.pole[i][0] !== EMPTY) {
                 return this.current_player
             }
-            if (this.pole[0][i] === this.pole[1][i] && this.pole[0][i] === this.pole[2][i]) {
+            if (this.pole[0][i] === this.pole[1][i] && this.pole[0][i] === this.pole[2][i] && this.pole[0][i] !== EMPTY) {
                 return this.current_player
             }
         }
 
-        if (this.pole[0][0] === this.pole[1][1] && this.pole[0][0] === this.pole[2][2]) {
+        if (this.pole[0][0] === this.pole[1][1] && this.pole[0][0] === this.pole[2][2] && this.pole[0][0] !== EMPTY) {
             return this.current_player
         }
 
-        if (this.pole[2][0] === this.pole[1][1] && this.pole[2][0] === this.pole[0][2]) {
+        if (this.pole[2][0] === this.pole[1][1] && this.pole[2][0] === this.pole[0][2] && this.pole[2][0] !== EMPTY) {
             return this.current_player;
         }
 
@@ -79,7 +79,6 @@ function renderGrid(dimension) {
 }
 
 function cellClickHandler(row, col) {
-    // Пиши код тут
     console.log(`Clicked on cell: ${row}, ${col}`);
 
     pole.move(row, col);
@@ -88,7 +87,7 @@ function cellClickHandler(row, col) {
     if (winner !== EMPTY) {
         alert(winner === CROSS ? "Выйграли крестики" : "Выйграли нолики");
     }
-    if (pole.has_empty_cell) {
+    if (!pole.has_empty_cell) {
         alert("победила дружба");
     }
 
