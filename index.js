@@ -15,10 +15,21 @@ class GamPole {
     constructor() {
     }
 
+    has_empty_cell = true;
+    _num_empty_cell = 9;
+
     move(row, col) {
+        if (this.pole[row][col] !== EMPTY) {
+            return
+        }
         this.pole[row][col] = this.current_player;
         renderSymbolInCell(this.current_player, row, col);
         this.current_player = this.current_player === CROSS ? ZERO : CROSS;
+        this._num_empty_cell--;
+        if (this._num_empty_cell === 0) {
+            this.has_empty_cell = false;
+        }
+
     }
 
     checkWinner() {
@@ -72,6 +83,14 @@ function cellClickHandler(row, col) {
     console.log(`Clicked on cell: ${row}, ${col}`);
 
     pole.move(row, col);
+
+    const winner = pole.checkWinner();
+    if (winner !== EMPTY) {
+        alert(winner === CROSS ? "Выйграли крестики" : "Выйграли нолики");
+    }
+    if (pole.has_empty_cell) {
+        alert("победила дружба");
+    }
 
     /* Пользоваться методом для размещения символа в клетке так:
         renderSymbolInCell(ZERO, row, col);
