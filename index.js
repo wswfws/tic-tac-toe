@@ -10,7 +10,7 @@ class GamPole {
         [EMPTY, EMPTY, EMPTY],
         [EMPTY, EMPTY, EMPTY]
     ]
-    current_player = ZERO
+    current_player = ZERO;
 
     constructor() {
     }
@@ -22,31 +22,42 @@ class GamPole {
         if (this.pole[row][col] !== EMPTY) {
             return
         }
-        this.current_player = this.current_player === CROSS ? ZERO : CROSS;
         this.pole[row][col] = this.current_player;
+        this.current_player = this.current_player === CROSS ? ZERO : CROSS;
         renderSymbolInCell(this.current_player, row, col);
         this._num_empty_cell--;
         if (this._num_empty_cell === 0) {
             this.has_empty_cell = false;
         }
+    }
 
+    render_color(arr_to_color) {
+        for (let i = 0; i < arr_to_color.length; i++) {
+            const cell = arr_to_color[i];
+            const player = this.pole[cell[0]][cell[1]] === CROSS ? ZERO : CROSS;
+            renderSymbolInCell(player, cell[0], cell[1], "red");
+        }
     }
 
     checkWinner() {
         for (let i = 0; i < this.pole.length; i++) {
-            if (this.pole[i][0] === this.pole[i][1] && this.pole[i][0] === this.pole[i][2] && this.pole[i][0] !== EMPTY) {
+            if (this.pole[i][0] === this.pole[i][1] && this.pole[i][0] === this.pole[i][2] && this.pole[i][2] !== EMPTY) {
+                this.render_color([[i, 0], [i, 1], [i, 2]])
                 return this.current_player
             }
-            if (this.pole[0][i] === this.pole[1][i] && this.pole[0][i] === this.pole[2][i] && this.pole[0][i] !== EMPTY) {
+            if (this.pole[0][i] === this.pole[1][i] && this.pole[0][i] === this.pole[2][i] && this.pole[2][i] !== EMPTY) {
+                this.render_color([[0, i], [1, i], [2, i]])
                 return this.current_player
             }
         }
 
-        if (this.pole[0][0] === this.pole[1][1] && this.pole[0][0] === this.pole[2][2] && this.pole[0][0] !== EMPTY) {
+        if (this.pole[0][0] === this.pole[1][1] && this.pole[0][0] === this.pole[2][2] && this.pole[2][2] !== EMPTY) {
+            this.render_color([0, 0], [1, 1], [2, 2])
             return this.current_player
         }
 
-        if (this.pole[2][0] === this.pole[1][1] && this.pole[2][0] === this.pole[0][2] && this.pole[2][0] !== EMPTY) {
+        if (this.pole[2][0] === this.pole[1][1] && this.pole[2][0] === this.pole[0][2] && this.pole[0][2] !== EMPTY) {
+            this.render_color([[0, 2], [1, 1], [2, 0]])
             return this.current_player;
         }
 
@@ -79,6 +90,7 @@ function renderGrid(dimension) {
 }
 
 function cellClickHandler(row, col) {
+    // Пиши код тут
     console.log(`Clicked on cell: ${row}, ${col}`);
 
     pole.move(row, col);
