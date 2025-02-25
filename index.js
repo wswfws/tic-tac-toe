@@ -5,14 +5,12 @@ const EMPTY = ' ';
 const container = document.getElementById('fieldWrapper');
 
 class GamPole {
-
-    current_player = CROSS;
-
     pole = [
         [EMPTY, EMPTY, EMPTY],
         [EMPTY, EMPTY, EMPTY],
         [EMPTY, EMPTY, EMPTY]
     ]
+    current_player = CROSS
 
     constructor() {
     }
@@ -21,6 +19,27 @@ class GamPole {
         this.pole[row][col] = this.current_player;
         renderSymbolInCell(this.current_player, row, col);
         this.current_player = this.current_player === CROSS ? ZERO : CROSS;
+    }
+
+    checkWinner() {
+        for (let i = 0; i < this.pole.length; i++) {
+            if (this.pole[i][0] === this.pole[i][1] && this.pole[i][0] === this.pole[i][2]) {
+                return this.current_player
+            }
+            if (this.pole[0][i] === this.pole[1][i] && this.pole[0][i] === this.pole[2][i]) {
+                return this.current_player
+            }
+        }
+
+        if (this.pole[0][0] === this.pole[1][1] && this.pole[0][0] === this.pole[2][2]) {
+            return this.current_player
+        }
+
+        if (this.pole[2][0] === this.pole[1][1] && this.pole[2][0] === this.pole[0][2]) {
+            return this.current_player;
+        }
+
+        return EMPTY;
     }
 }
 
