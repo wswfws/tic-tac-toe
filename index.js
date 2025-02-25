@@ -4,6 +4,12 @@ const EMPTY = ' ';
 
 const container = document.getElementById('fieldWrapper');
 
+const getRandomInteger = (min, max) => {
+    min = Math.ceil(min)
+    max = Math.floor(max)
+    return Math.floor(Math.random() * (max - min)) + min
+}
+
 class GamPole {
     pole = [];
     current_player = ZERO;
@@ -22,6 +28,19 @@ class GamPole {
         this._num_empty_cell = size * size;
     }
 
+    get_random_empty_cell() {
+        let skip = getRandomInteger(0, this._num_empty_cell);
+        for (let i = 0; i < this.pole.length; i++) {
+            for (let j = 0; j < this.pole.length; j++) {
+                if (this.pole[i][j] === EMPTY) {
+                    if (skip === 0) {
+                        return [i, j]
+                    }
+                    skip--;
+                }
+            }
+        }
+    }
 
     move(row, col) {
         if (!this.game_end) {
@@ -87,6 +106,7 @@ let pole = new GamPole(size);
 
 startGame();
 addResetListener();
+addBotListener();
 
 function startGame() {
     renderGrid(size);
@@ -141,6 +161,16 @@ function findCell(row, col) {
 function addResetListener() {
     const resetButton = document.getElementById('reset');
     resetButton.addEventListener('click', resetClickHandler);
+}
+
+function botMove() {
+    const move = pole.get_random_empty_cell();
+    cellClickHandler(...move)
+}
+
+function addBotListener() {
+    const resetButton = document.getElementById('bot');
+    resetButton.addEventListener('click', botMove);
 }
 
 function resetClickHandler() {
