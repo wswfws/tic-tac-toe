@@ -65,7 +65,7 @@ class GamPole {
     }
 }
 
-const pole = new GamPole();
+let pole = new GamPole();
 
 startGame();
 addResetListener();
@@ -126,6 +126,8 @@ function addResetListener() {
 }
 
 function resetClickHandler() {
+    pole = new GamPole();
+    startGame();
     console.log('reset!');
 }
 
